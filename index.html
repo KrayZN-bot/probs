@@ -3,13 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LiveryHub (Full Version)</title>
+  <title>LiveryHub (Vercel Ready)</title>
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
 </head>
 <body class="bg-gradient-to-br from-gray-900 to-gray-800 text-white min-h-screen">
 
@@ -49,22 +44,25 @@
 .input{width:100%;padding:10px;margin-bottom:10px;border-radius:10px;background:#374151}
 </style>
 
-<script>
-// 🔥 REPLACE THIS WITH YOUR FIREBASE CONFIG
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+// Your Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyCsqZ0h74iJRGWlDoCrIVmoXV2aprD_WYo",
   authDomain: "vercel-8c369.firebaseapp.com",
   projectId: "vercel-8c369",
 };
 
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-// Auth state
 let currentUser = null;
 
-auth.onAuthStateChanged(user => {
+onAuthStateChanged(auth, user => {
   currentUser = user;
   updateNav();
   loadLiveries();
@@ -73,65 +71,57 @@ auth.onAuthStateChanged(user => {
 function updateNav(){
   const nav = document.getElementById('navUser');
   if(currentUser){
-    nav.innerHTML = `
-      <span>${currentUser.email}</span>
-      <button onclick="logout()" class="ml-2 bg-red-500 px-2 py-1 rounded">Logout</button>
-    `;
+    nav.innerHTML = `<span>${currentUser.email}</span> <button onclick="logout()" class='ml-2 bg-red-500 px-2 py-1 rounded'>Logout</button>`;
   } else {
-    nav.innerHTML = `
-      <button onclick="login()" class="bg-blue-500 px-3 py-1 rounded">Login</button>
-    `;
+    nav.innerHTML = `<button onclick="login()" class='bg-blue-500 px-3 py-1 rounded'>Login</button>`;
   }
 }
 
 function login(){
   const email = prompt('Email');
   const pass = prompt('Password');
-
-  auth.signInWithEmailAndPassword(email, pass)
-  .catch(()=>{
-    auth.createUserWithEmailAndPassword(email, pass);
+  signInWithEmailAndPassword(auth, email, pass).catch(()=>{
+    createUserWithEmailAndPassword(auth, email, pass);
   });
 }
 
-function logout(){ auth.signOut(); }
+function logout(){
+  signOut(auth);
+}
 
 function openUpload(){
   if(!currentUser) return alert('Login first');
   document.getElementById('uploadModal').classList.remove('hidden');
 }
 
-function upload(){
+async function upload(){
   const title = document.getElementById('title').value;
   const image = document.getElementById('image').value;
   const category = document.getElementById('category').value;
 
-  db.collection('liveries').add({
-    title,
-    image,
-    category,
-    author: currentUser.email,
-    created: Date.now()
+  if(!title || !image) return alert('Fill all fields');
+
+  await addDoc(collection(db,'liveries'), {
+    title, image, category, author: currentUser.email, created: Date.now()
   });
 
   document.getElementById('uploadModal').classList.add('hidden');
 }
 
 function loadLiveries(){
-  db.collection('liveries').orderBy('created','desc')
-  .onSnapshot(snapshot=>{
+  const q = query(collection(db,'liveries'), orderBy('created','desc'));
+  onSnapshot(q, snapshot=>{
     const grid = document.getElementById('grid');
-    grid.innerHTML='';
-
+    grid.innerHTML = '';
     snapshot.forEach(doc=>{
       const l = doc.data();
       grid.innerHTML += `
-        <div class="bg-gray-800 rounded-xl overflow-hidden shadow hover:scale-105 transition">
-          <img src="${l.image}" class="w-full h-48 object-cover">
-          <div class="p-3">
-            <h3 class="font-bold">${l.title}</h3>
-            <p class="text-sm text-gray-400">${l.category}</p>
-            <p class="text-xs text-gray-500">${l.author}</p>
+        <div class='bg-gray-800 rounded-xl overflow-hidden shadow hover:scale-105 transition'>
+          <img src='${l.image}' class='w-full h-48 object-cover'>
+          <div class='p-3'>
+            <h3 class='font-bold'>${l.title}</h3>
+            <p class='text-sm text-gray-400'>${l.category}</p>
+            <p class='text-xs text-gray-500'>${l.author}</p>
           </div>
         </div>
       `;
