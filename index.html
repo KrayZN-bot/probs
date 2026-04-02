@@ -6,68 +6,78 @@
   <title>LiveryHub</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-900 text-white">
+<body class="bg-gradient-to-br from-gray-900 to-gray-800 text-white min-h-screen">
 
   <!-- Navbar -->
-  <nav class="bg-gray-800 p-4 flex justify-between items-center shadow-lg">
-    <h1 class="text-2xl font-bold">🚓 LiveryHub</h1>
+  <nav class="bg-gray-900/80 backdrop-blur p-4 flex justify-between items-center shadow-xl sticky top-0 z-50">
+    <h1 class="text-2xl font-bold tracking-wide">🚓 LiveryHub</h1>
     <div>
-      <button onclick="showRegister()" class="bg-blue-500 px-4 py-2 rounded-xl mr-2">Register</button>
-      <button onclick="showUpload()" class="bg-green-500 px-4 py-2 rounded-xl">Upload</button>
+      <button onclick="showRegister()" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-xl mr-2">Register</button>
+      <button onclick="showUpload()" class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded-xl">Upload</button>
     </div>
   </nav>
 
   <!-- Hero -->
-  <section class="text-center py-12">
-    <h2 class="text-4xl font-bold mb-4">Share & Download ERLC Liveries</h2>
-    <p class="text-gray-400">Upload your designs, link your Roblox, and explore thousands of free liveries.</p>
+  <section class="text-center py-14">
+    <h2 class="text-5xl font-extrabold mb-4">Share ERLC Liveries</h2>
+    <p class="text-gray-400 text-lg">Upload, browse, and download liveries created by the community.</p>
   </section>
 
   <!-- Categories -->
-  <section class="px-6">
-    <h3 class="text-2xl mb-4">Categories</h3>
-    <div class="flex gap-4 flex-wrap">
-      <button onclick="filterCategory('All')" class="bg-gray-700 px-4 py-2 rounded-xl">All</button>
-      <button onclick="filterCategory('Police')" class="bg-blue-600 px-4 py-2 rounded-xl">Police</button>
-      <button onclick="filterCategory('Fire')" class="bg-red-600 px-4 py-2 rounded-xl">Fire</button>
-      <button onclick="filterCategory('EMS')" class="bg-green-600 px-4 py-2 rounded-xl">EMS</button>
-      <button onclick="filterCategory('Civilian')" class="bg-yellow-600 px-4 py-2 rounded-xl">Civilian</button>
+  <section class="px-6 mb-6">
+    <div class="flex gap-3 flex-wrap justify-center">
+      <button onclick="filterCategory('All')" class="category-btn">All</button>
+      <button onclick="filterCategory('Police')" class="category-btn bg-blue-600">Police</button>
+      <button onclick="filterCategory('Fire')" class="category-btn bg-red-600">Fire</button>
+      <button onclick="filterCategory('EMS')" class="category-btn bg-green-600">EMS</button>
+      <button onclick="filterCategory('Civilian')" class="category-btn bg-yellow-500 text-black">Civilian</button>
     </div>
   </section>
 
-  <!-- Livery Grid -->
-  <section class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6" id="liveryGrid"></section>
+  <!-- Grid -->
+  <section class="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" id="liveryGrid"></section>
 
   <!-- Register Modal -->
-  <div id="registerModal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center">
-    <div class="bg-gray-800 p-6 rounded-2xl w-80">
+  <div id="registerModal" class="hidden fixed inset-0 bg-black/70 flex justify-center items-center">
+    <div class="bg-gray-800 p-6 rounded-2xl w-80 shadow-xl">
       <h2 class="text-xl mb-4">Create Account</h2>
-      <input id="username" placeholder="Username" class="w-full p-2 mb-3 rounded bg-gray-700">
-      <input id="roblox" placeholder="Roblox Username" class="w-full p-2 mb-3 rounded bg-gray-700">
-      <button onclick="register()" class="bg-blue-500 w-full py-2 rounded-xl">Register</button>
+      <input id="username" placeholder="Username" class="input">
+      <input id="roblox" placeholder="Roblox Username" class="input">
+      <button onclick="register()" class="btn-primary">Register</button>
     </div>
   </div>
 
   <!-- Upload Modal -->
-  <div id="uploadModal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center">
-    <div class="bg-gray-800 p-6 rounded-2xl w-80">
+  <div id="uploadModal" class="hidden fixed inset-0 bg-black/70 flex justify-center items-center">
+    <div class="bg-gray-800 p-6 rounded-2xl w-80 shadow-xl">
       <h2 class="text-xl mb-4">Upload Livery</h2>
-      <input id="title" placeholder="Title" class="w-full p-2 mb-3 rounded bg-gray-700">
-      <input id="image" placeholder="Image URL" class="w-full p-2 mb-3 rounded bg-gray-700">
-      <select id="category" class="w-full p-2 mb-3 rounded bg-gray-700">
+      <input id="title" placeholder="Title" class="input">
+      <input id="image" placeholder="Image URL" class="input">
+      <select id="category" class="input">
         <option>Police</option>
         <option>Fire</option>
         <option>EMS</option>
         <option>Civilian</option>
       </select>
-      <button onclick="upload()" class="bg-green-500 w-full py-2 rounded-xl">Upload</button>
+      <button onclick="upload()" class="btn-success">Upload</button>
     </div>
   </div>
 
+<style>
+.input { width:100%; padding:10px; margin-bottom:10px; border-radius:10px; background:#374151; }
+.btn-primary { width:100%; padding:10px; background:#3b82f6; border-radius:10px; }
+.btn-success { width:100%; padding:10px; background:#22c55e; border-radius:10px; }
+.category-btn { padding:8px 14px; border-radius:999px; background:#374151; }
+</style>
+
 <script>
-let user = null;
-let liveries = [];
+let user = JSON.parse(localStorage.getItem('user')) || null;
+let liveries = JSON.parse(localStorage.getItem('liveries')) || [];
 let currentCategory = 'All';
+
+function save() {
+  localStorage.setItem('liveries', JSON.stringify(liveries));
+}
 
 function showRegister() {
   document.getElementById('registerModal').classList.remove('hidden');
@@ -82,8 +92,11 @@ function register() {
   const username = document.getElementById('username').value;
   const roblox = document.getElementById('roblox').value;
   if (!username || !roblox) return alert('Fill all fields');
+
   user = { username, roblox };
-  alert('Account created!');
+  localStorage.setItem('user', JSON.stringify(user));
+
+  alert('Account saved!');
   document.getElementById('registerModal').classList.add('hidden');
 }
 
@@ -92,7 +105,11 @@ function upload() {
   const image = document.getElementById('image').value;
   const category = document.getElementById('category').value;
 
-  liveries.push({ title, image, category, author: user.username });
+  if (!title || !image) return alert('Fill all fields');
+
+  liveries.unshift({ title, image, category, author: user.username });
+  save();
+
   document.getElementById('uploadModal').classList.add('hidden');
   render();
 }
@@ -110,15 +127,19 @@ function render() {
     .filter(l => currentCategory === 'All' || l.category === currentCategory)
     .forEach(l => {
       grid.innerHTML += `
-        <div class="bg-gray-800 p-4 rounded-2xl shadow-lg hover:scale-105 transition">
-          <img src="${l.image}" class="rounded-xl mb-3">
-          <h3 class="text-lg font-bold">${l.title}</h3>
-          <p class="text-gray-400">${l.category}</p>
-          <p class="text-sm text-gray-500">By ${l.author}</p>
+        <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-xl hover:scale-105 transition duration-300">
+          <img src="${l.image}" class="w-full h-48 object-cover">
+          <div class="p-4">
+            <h3 class="text-xl font-bold">${l.title}</h3>
+            <p class="text-sm text-gray-400">${l.category}</p>
+            <p class="text-xs text-gray-500 mt-1">By ${l.author}</p>
+          </div>
         </div>
       `;
     });
 }
+
+render();
 </script>
 
 </body>
