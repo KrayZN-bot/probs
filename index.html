@@ -3,131 +3,114 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LiveryHub (Vercel Ready)</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>ERLCX Clone</title>
+  <link rel="icon" href="favicon.ico">
+  <style>
+    /* General Styles */
+    body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #0f172a; color: #fff; }
+    a { text-decoration: none; color: inherit; }
+
+    /* Header */
+    header { display: flex; justify-content: space-between; align-items: center; padding: 20px 50px; background: #020617; }
+    header h1 { font-size: 28px; }
+    nav a { margin-left: 25px; font-weight: 500; opacity: 0.8; transition: opacity 0.2s; }
+    nav a:hover { opacity: 1; }
+
+    /* Hero Section */
+    .hero { text-align: center; padding: 120px 20px; }
+    .hero h2 { font-size: 56px; margin-bottom: 20px; }
+    .hero p { font-size: 20px; opacity: 0.7; }
+    .btn { display: inline-block; margin-top: 30px; padding: 14px 28px; background: #2563eb; border-radius: 8px; font-weight: 600; transition: background 0.2s; }
+    .btn:hover { background: #1d4ed8; }
+
+    /* Sections */
+    .section { padding: 80px 20px; text-align: center; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; margin-top: 40px; }
+    .card { background: #020617; padding: 25px; border-radius: 12px; transition: transform 0.2s, box-shadow 0.2s; }
+    .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+
+    /* Footer */
+    footer { text-align: center; padding: 30px 20px; background: #020617; opacity: 0.7; }
+
+    /* Buttons / Interactive */
+    .btn-primary { background: #2563eb; color: white; }
+    .btn-secondary { background: #1e293b; color: white; border: 1px solid #2563eb; }
+  </style>
 </head>
-<body class="bg-gradient-to-br from-gray-900 to-gray-800 text-white min-h-screen">
+<body>
 
-<nav class="bg-gray-900 p-4 flex justify-between items-center">
-  <h1 class="text-2xl font-bold">🚓 LiveryHub</h1>
-  <div id="navUser"></div>
-</nav>
+<header>
+  <h1>ERLCX Clone</h1>
+  <nav>
+    <a href="#home">Home</a>
+    <a href="#features">Features</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
 
-<section class="text-center py-12">
-  <h2 class="text-4xl font-bold">Community Liveries</h2>
-  <p class="text-gray-400">Upload and explore liveries from everyone</p>
+<section class="hero" id="home">
+  <h2>Next-Level Web Experience</h2>
+  <p>Fast, sleek, and modern interface just like ERLCX</p>
+  <a href="#features" class="btn btn-primary">Get Started</a>
 </section>
 
-<div class="text-center mb-6">
-  <button onclick="openUpload()" class="bg-green-500 px-4 py-2 rounded-xl">Upload</button>
-</div>
-
-<section id="grid" class="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></section>
-
-<!-- Upload Modal -->
-<div id="uploadModal" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center">
-  <div class="bg-gray-800 p-6 rounded-xl w-80">
-    <h2 class="mb-3">Upload Livery</h2>
-    <input id="title" placeholder="Title" class="input">
-    <input id="image" placeholder="Image URL" class="input">
-    <select id="category" class="input">
-      <option>Police</option>
-      <option>Fire</option>
-      <option>EMS</option>
-      <option>Civilian</option>
-    </select>
-    <button onclick="upload()" class="bg-green-500 w-full p-2 rounded">Upload</button>
+<section class="section" id="features">
+  <h2>Features</h2>
+  <div class="cards">
+    <div class="card">
+      <h3>Fast Loading</h3>
+      <p>Optimized for performance with minimal overhead.</p>
+    </div>
+    <div class="card">
+      <h3>Responsive Design</h3>
+      <p>Looks perfect on all devices, from mobile to desktop.</p>
+    </div>
+    <div class="card">
+      <h3>Secure & Reliable</h3>
+      <p>Ready for Firebase authentication and database integration.</p>
+    </div>
+    <div class="card">
+      <h3>Customizable</h3>
+      <p>Easy to adapt for your own branding and features.</p>
+    </div>
   </div>
-</div>
+</section>
 
-<style>
-.input{width:100%;padding:10px;margin-bottom:10px;border-radius:10px;background:#374151}
-</style>
+<section class="section" id="about">
+  <h2>About ERLCX Clone</h2>
+  <p>This template is built for modern web apps. Fully compatible with Firebase, Vercel deployment, and scalable for growth.</p>
+</section>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+<section class="section" id="contact">
+  <h2>Contact</h2>
+  <p>Connect with us or integrate your Firebase backend for authentication and real-time features.</p>
+  <button class="btn btn-secondary" onclick="alert('Replace with Firebase Auth / Contact Form')">Sign In / Sign Up</button>
+</section>
 
-// Your Firebase Config
-const firebaseConfig = {
-  apiKey: "AIzaSyCsqZ0h74iJRGWlDoCrIVmoXV2aprD_WYo",
-  authDomain: "vercel-8c369.firebaseapp.com",
-  projectId: "vercel-8c369",
-};
+<footer>
+  <p>© 2026 ERLCX Clone. All rights reserved.</p>
+</footer>
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+<!-- Firebase SDK Placeholder -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script>
+  // TODO: Replace with your Firebase config
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_AUTH_DOMAIN",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_STORAGE_BUCKET",
+    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+    appId: "YOUR_APP_ID"
+  };
+  firebase.initializeApp(firebaseConfig);
 
-let currentUser = null;
-
-onAuthStateChanged(auth, user => {
-  currentUser = user;
-  updateNav();
-  loadLiveries();
-});
-
-function updateNav(){
-  const nav = document.getElementById('navUser');
-  if(currentUser){
-    nav.innerHTML = `<span>${currentUser.email}</span> <button onclick="logout()" class='ml-2 bg-red-500 px-2 py-1 rounded'>Logout</button>`;
-  } else {
-    nav.innerHTML = `<button onclick="login()" class='bg-blue-500 px-3 py-1 rounded'>Login</button>`;
-  }
-}
-
-function login(){
-  const email = prompt('Email');
-  const pass = prompt('Password');
-  signInWithEmailAndPassword(auth, email, pass).catch(()=>{
-    createUserWithEmailAndPassword(auth, email, pass);
-  });
-}
-
-function logout(){
-  signOut(auth);
-}
-
-function openUpload(){
-  if(!currentUser) return alert('Login first');
-  document.getElementById('uploadModal').classList.remove('hidden');
-}
-
-async function upload(){
-  const title = document.getElementById('title').value;
-  const image = document.getElementById('image').value;
-  const category = document.getElementById('category').value;
-
-  if(!title || !image) return alert('Fill all fields');
-
-  await addDoc(collection(db,'liveries'), {
-    title, image, category, author: currentUser.email, created: Date.now()
-  });
-
-  document.getElementById('uploadModal').classList.add('hidden');
-}
-
-function loadLiveries(){
-  const q = query(collection(db,'liveries'), orderBy('created','desc'));
-  onSnapshot(q, snapshot=>{
-    const grid = document.getElementById('grid');
-    grid.innerHTML = '';
-    snapshot.forEach(doc=>{
-      const l = doc.data();
-      grid.innerHTML += `
-        <div class='bg-gray-800 rounded-xl overflow-hidden shadow hover:scale-105 transition'>
-          <img src='${l.image}' class='w-full h-48 object-cover'>
-          <div class='p-3'>
-            <h3 class='font-bold'>${l.title}</h3>
-            <p class='text-sm text-gray-400'>${l.category}</p>
-            <p class='text-xs text-gray-500'>${l.author}</p>
-          </div>
-        </div>
-      `;
-    });
-  });
-}
+  // Example: Firebase Auth placeholder
+  const auth = firebase.auth();
+  const db = firebase.firestore();
 </script>
 
 </body>
